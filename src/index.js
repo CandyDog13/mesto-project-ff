@@ -2,8 +2,8 @@
 import { event } from 'jquery';
 import './pages/index.css';
 import {initialCards} from './components/cards.js';
-import {createCard, deleteCard, likeButtonOn} from './components/card.js';
-import { openPopup, closePopup, closeEscapeBtn, closePopupWindow} from './components/modal.js';
+import {createCard, deleteCard, handleLikeButton} from './components/card.js';
+import { openPopup, closePopup, handleEscapeKey, closePopupWindow} from './components/modal.js';
 
 // Переменные для работы с попапами через DOM
 
@@ -14,6 +14,9 @@ import { openPopup, closePopup, closeEscapeBtn, closePopupWindow} from './compon
     const newCardButton = document.querySelector('.profile__add-button');
 
     const popupImgOpen = document.querySelector('.popup_type_image');
+
+    const popupImgOpenSoursePic = popupImgOpen.querySelector('.popup__image');
+    const popupImgOpenCaption = popupImgOpen.querySelector('.popup__caption');
 
 // Переменные для работы с Редактированием
     const formElement=document.forms['edit-profile'];
@@ -28,34 +31,33 @@ import { openPopup, closePopup, closeEscapeBtn, closePopupWindow} from './compon
 
 // Вывести карточки на страницу
 initialCards.forEach(function(element) {
-    cardsContainer.append(createCard(element.name, element.link, deleteCard, likeButtonOn, openPopupImg));
+    cardsContainer.append(createCard(element, deleteCard, handleLikeButton, openPopupImg));
 });
 
 // Открытие попапа c картинкой
 function openPopupImg(linkCard, nameCard) {
     openPopup(popupImgOpen);
-    popupImgOpen.querySelector('.popup__image').src = linkCard;
-    popupImgOpen.querySelector('.popup__caption').textContent = nameCard;
+    popupImgOpenSoursePic.src = linkCard;
+    popupImgOpenSoursePic.alt = nameCard;
+    popupImgOpenCaption.textContent = nameCard;
 }
 
 // Вызовы открытия попапов
-editButton.addEventListener('click', () => fillEditProfile(editWindow));
-newCardButton.addEventListener('click',() => addNewCardOnPage(popupNewCard));
+editButton.addEventListener('click', () => openProfilePopup(editWindow));
+newCardButton.addEventListener('click',() => openCardPopup(popupNewCard));
 
 // Функция добавления стандартных значений при открытии
-function fillEditProfile (editWindow) {
+function openProfilePopup (editWindow) {
     formElement['name'].value = profileTitle.textContent;
     formElement['description'].value = profileDescription.textContent;
-    openPopup(editWindow);
-    formElement.addEventListener('submit', handleFormSubmit);    
+    openPopup(editWindow);    
 }
 
-function addNewCardOnPage (popupNewCard) {
+function openCardPopup (popupNewCard) {
     openPopup(popupNewCard);
-    formNewCard.addEventListener('submit', handleNewCardSubmit);  
 }
 
-function handleFormSubmit(evt) {
+function handleProfileFormSubmit(evt) {
     evt.preventDefault();
     const nameInput = formElement['name'].value;
     const jobInput = formElement['description'].value;
@@ -69,8 +71,14 @@ function handleNewCardSubmit(evt) {
     const placeName = formNewCard['place-name'].value;
     const linkInput = formNewCard['link'].value;
 
-    cardsContainer.prepend(createCard(placeName, linkInput, deleteCard, likeButtonOn, openPopupImg));
-    formNewCard['link'].value = '';
-    formNewCard['place-name'].value = '';
+    const cardData = {name:placeName, link:linkInput};
+
+    cardsContainer.prepend(createCard(cardData, deleteCard, handleLikeButton, openPopupImg));
+    evt.target.reset()
+    // formNewCard['link'].value = '';
+    // formNewCard['place-name'].value = '';
     closePopup(popupNewCard);
 }
+
+formElement.addEventListener('submit', handleProfileFormSubmit);
+formNewCard.addEventListener('submit', handleNewCardSubmit);

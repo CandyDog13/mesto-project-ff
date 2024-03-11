@@ -1,14 +1,20 @@
 // @todo: Темплейт карточки
 const cardTemplate = document.querySelector('#card-template').content;
+const cardTemplatePlacesItem = cardTemplate.querySelector('.places__item');
+
+
+const cardData = new Object({ name: '', link: '' });
 
 // Функция создания карточки
-export function createCard(nameCard, linkCard, deleteCardFunc, likeButtonOn, openPopupImg) {
-    const cardElement = cardTemplate.querySelector('.places__item').cloneNode(true);
-    cardElement.querySelector('.card__image').src = linkCard;
-    cardElement.querySelector('.card__title').textContent = nameCard;
+export function createCard(cardData, deleteCardFunc, handleLikeButton, openPopupImg) {
+    const cardElement = cardTemplatePlacesItem.cloneNode(true);
+    const cardImage = cardElement.querySelector('.card__image');
+    cardImage.src =  cardData.link;
+    cardImage.alt = cardData.name;
+    cardElement.querySelector('.card__title').textContent = cardData.name;
     cardElement.querySelector('.card__delete-button').addEventListener('click', () => deleteCardFunc(cardElement));
-    cardElement.querySelector('.card__like-button').addEventListener('click', likeButtonOn);
-    cardElement.querySelector('.card__image').addEventListener('click',() => openPopupImg(linkCard, nameCard));
+    cardElement.querySelector('.card__like-button').addEventListener('click', handleLikeButton);
+    cardElement.querySelector('.card__image').addEventListener('click',() => openPopupImg(cardData.link, cardData.name));
       return cardElement;
   }
   
@@ -18,10 +24,6 @@ export function createCard(nameCard, linkCard, deleteCardFunc, likeButtonOn, ope
   }
   
   // Добавление лайка
-  export function likeButtonOn(evt) {
-    if (evt.target.classList.contains('card__like-button_is-active')) {
-        evt.target.classList.remove('card__like-button_is-active');
-    } else {
-        evt.target.classList.add('card__like-button_is-active');
-    }
+  export function handleLikeButton(evt) {
+    evt.target.classList.toggle("card__like-button_is-active");
   }

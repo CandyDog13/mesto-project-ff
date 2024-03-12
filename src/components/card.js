@@ -14,7 +14,7 @@ export function createCard(cardData, deleteCardFunc, handleLikeButton, openPopup
     cardElement.querySelector('.card__title').textContent = cardData.name;
     cardElement.querySelector('.card__delete-button').addEventListener('click', () => deleteCardFunc(cardElement));
     cardElement.querySelector('.card__like-button').addEventListener('click', handleLikeButton);
-    cardElement.querySelector('.card__image').addEventListener('click',() => openPopupImg(cardData.link, cardData.name));
+    cardImage.addEventListener('click',() => openPopupImg(cardData.link, cardData.name));
       return cardElement;
   }
   

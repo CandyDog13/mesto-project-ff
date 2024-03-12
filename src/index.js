@@ -19,7 +19,7 @@ import { openPopup, closePopup, handleEscapeKey, closePopupWindow} from './compo
     const popupImgOpenCaption = popupImgOpen.querySelector('.popup__caption');
 
 // Переменные для работы с Редактированием
-    const formElement=document.forms['edit-profile'];
+    const profileFormElement=document.forms['edit-profile'];
     const profileTitle = document.querySelector('.profile').querySelector('.profile__title');
     const profileDescription = document.querySelector('.profile').querySelector('.profile__description');
 
@@ -44,23 +44,19 @@ function openPopupImg(linkCard, nameCard) {
 
 // Вызовы открытия попапов
 editButton.addEventListener('click', () => openProfilePopup(editWindow));
-newCardButton.addEventListener('click',() => openCardPopup(popupNewCard));
+newCardButton.addEventListener('click',() => openPopup(popupNewCard));
 
 // Функция добавления стандартных значений при открытии
 function openProfilePopup (editWindow) {
-    formElement['name'].value = profileTitle.textContent;
-    formElement['description'].value = profileDescription.textContent;
+    profileFormElement['name'].value = profileTitle.textContent;
+    profileFormElement['description'].value = profileDescription.textContent;
     openPopup(editWindow);    
-}
-
-function openCardPopup (popupNewCard) {
-    openPopup(popupNewCard);
 }
 
 function handleProfileFormSubmit(evt) {
     evt.preventDefault();
-    const nameInput = formElement['name'].value;
-    const jobInput = formElement['description'].value;
+    const nameInput = profileFormElement['name'].value;
+    const jobInput = profileFormElement['description'].value;
     profileTitle.textContent = nameInput;
     profileDescription.textContent = jobInput;
     closePopup(editWindow);
@@ -80,5 +76,5 @@ function handleNewCardSubmit(evt) {
     closePopup(popupNewCard);
 }
 
-formElement.addEventListener('submit', handleProfileFormSubmit);
+profileFormElement.addEventListener('submit', handleProfileFormSubmit);
 formNewCard.addEventListener('submit', handleNewCardSubmit);

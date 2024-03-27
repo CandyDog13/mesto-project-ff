@@ -3,7 +3,8 @@ import { event } from 'jquery';
 import './pages/index.css';
 import {initialCards} from './components/cards.js';
 import {createCard, deleteCard, handleLikeButton} from './components/card.js';
-import { openPopup, closePopup, handleEscapeKey, closePopupWindow} from './components/modal.js';
+import {openPopup, closePopup, handleEscapeKey, closePopupWindow} from './components/modal.js';
+import { enableValidation, clearValidation} from './components/validation.js';
 
 // Переменные для работы с попапами через DOM
 
@@ -42,15 +43,42 @@ function openPopupImg(linkCard, nameCard) {
     popupImgOpenCaption.textContent = nameCard;
 }
 
+enableValidation({
+    formSelector: '.popup__form',
+    inputSelector: '.popup__input',
+    submitButtonSelector: '.popup__button',
+    inactiveButtonClass: 'popup__button_disabled',
+    inputErrorClass: 'popup__input_type_error',
+    errorClass: 'popup__error_visible'
+  });
+
 // Вызовы открытия попапов
 editButton.addEventListener('click', () => openProfilePopup(editWindow));
-newCardButton.addEventListener('click',() => openPopup(popupNewCard));
+newCardButton.addEventListener('click',() => {
+    clearValidation(popupNewCard, {
+        formSelector: '.popup__form',
+        inputSelector: '.popup__input',
+        submitButtonSelector: '.popup__button',
+        inactiveButtonClass: 'popup__button_disabled',
+        inputErrorClass: 'popup__input_type_error',
+        errorClass: 'popup__error_visible'
+      });
+    openPopup(popupNewCard);
+});
 
 // Функция добавления стандартных значений при открытии
 function openProfilePopup (editWindow) {
     profileFormElement['name'].value = profileTitle.textContent;
     profileFormElement['description'].value = profileDescription.textContent;
-    openPopup(editWindow);    
+    clearValidation(profileFormElement, {
+        formSelector: '.popup__form',
+        inputSelector: '.popup__input',
+        submitButtonSelector: '.popup__button',
+        inactiveButtonClass: 'popup__button_disabled',
+        inputErrorClass: 'popup__input_type_error',
+        errorClass: 'popup__error_visible'
+      });
+    openPopup(editWindow);
 }
 
 function handleProfileFormSubmit(evt) {
@@ -76,5 +104,10 @@ function handleNewCardSubmit(evt) {
     closePopup(popupNewCard);
 }
 
+// слушатели на форму редактирования
 profileFormElement.addEventListener('submit', handleProfileFormSubmit);
+
+// слушатели на форму создания новой карточки
 formNewCard.addEventListener('submit', handleNewCardSubmit);
+
+// enableValidation(); 

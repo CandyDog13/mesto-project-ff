@@ -1,10 +1,10 @@
 // Импорты необходимых функций и параметров
 import { event } from 'jquery';
 import './pages/index.css';
-import {initialCards} from './components/cards.js';
 import {createCard, deleteCard, handleLikeButton} from './components/card.js';
 import {openPopup, closePopup, handleEscapeKey, closePopupWindow} from './components/modal.js';
 import { enableValidation, clearValidation} from './components/validation.js';
+import { getInitialCards, getProfileInformation, editProfileServer, postNewCardServer } from './components/api.js';
 
 // Переменные для работы с попапами через DOM
 
@@ -23,6 +23,7 @@ import { enableValidation, clearValidation} from './components/validation.js';
     const profileFormElement=document.forms['edit-profile'];
     const profileTitle = document.querySelector('.profile').querySelector('.profile__title');
     const profileDescription = document.querySelector('.profile').querySelector('.profile__description');
+    const profileImage = document.querySelector('.profile').querySelector('.profile__image');
 
 // Переменные для работы с созданием новой карточки
     const formNewCard=document.forms['new-place'];
@@ -30,10 +31,19 @@ import { enableValidation, clearValidation} from './components/validation.js';
 // DOM узлы
     const cardsContainer = document.querySelector('.places__list');
 
-// Вывести карточки на страницу
-initialCards.forEach(function(element) {
-    cardsContainer.append(createCard(element, deleteCard, handleLikeButton, openPopupImg));
-});
+  // Получение информации с сервера
+  Promise.all([getInitialCards(), getProfileInformation()])
+    .then(([cardsServerAnswer, informationServerAnswer])=> {
+        profileTitle.textContent=informationServerAnswer.name;
+        profileDescription.textContent=informationServerAnswer.about;
+        profileImage.style.backgroundImage = `url(${informationServerAnswer.avatar})`;
+        cardsServerAnswer.forEach(function(element) {
+            cardsContainer.append(createCard(element, deleteCard, handleLikeButton, openPopupImg));
+        });
+    })
+    .catch((err) => {
+        console.log(err); // выводим ошибку в консоль
+      });
 
 // Открытие попапа c картинкой
 function openPopupImg(linkCard, nameCard) {
@@ -85,9 +95,14 @@ function handleProfileFormSubmit(evt) {
     evt.preventDefault();
     const nameInput = profileFormElement['name'].value;
     const jobInput = profileFormElement['description'].value;
-    profileTitle.textContent = nameInput;
-    profileDescription.textContent = jobInput;
-    closePopup(editWindow);
+    editProfileServer(nameInput, jobInput)
+        .then(profile=>{
+            profileTitle.textContent = profile.name;
+            profileDescription.textContent = profile.about;
+            closePopup(editWindow);
+        }).catch((err) => {
+            console.log(err); // выводим ошибку в консоль
+          });
 }
 
 function handleNewCardSubmit(evt) {
@@ -97,11 +112,16 @@ function handleNewCardSubmit(evt) {
 
     const cardData = {name:placeName, link:linkInput};
 
-    cardsContainer.prepend(createCard(cardData, deleteCard, handleLikeButton, openPopupImg));
-    evt.target.reset()
+    // cardsContainer.prepend(createCard(cardData, deleteCard, handleLikeButton, openPopupImg));
+    postNewCardServer(placeName, linkInput).then(card=>{
+        cardsContainer.prepend(createCard({name:card.name, link:card.link, likes:card.likes}, deleteCard, handleLikeButton, openPopupImg));
+        evt.target.reset();
+        closePopup(popupNewCard);
+    }).catch((err) => {
+        console.log(err); // выводим ошибку в консоль
+      });
     // formNewCard['link'].value = '';
     // formNewCard['place-name'].value = '';
-    closePopup(popupNewCard);
 }
 
 // слушатели на форму редактирования

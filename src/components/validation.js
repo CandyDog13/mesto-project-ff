@@ -1,5 +1,5 @@
 
-const validDomElement = {};
+// const validDomElement = {};
 
 // const validDomElement = {
 //     formSelector: '.popup__form',

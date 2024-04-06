@@ -41,6 +41,37 @@ export function postNewCardServer(nameCard, linkCard) {
   }).then(checkRes)
 }
 
+export function cardDeleteFromServer(cardId) {
+  return fetch(`${config.baseUrl}/cards/${cardId}`, {
+    method: 'DELETE',
+    headers: config.headers
+  }).then(checkRes)
+}
+
+export function putLikeCardServer(cardId) {
+  return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
+    method: 'PUT',
+    headers: config.headers
+  }).then(checkRes)
+}
+
+export function deleteLikeCardServer(cardId) {
+  return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
+    method: 'DELETE',
+    headers: config.headers
+  }).then(checkRes)
+}
+
+export function editAvatarServer(linkAvatar) {
+  return fetch(`${config.baseUrl}//users/me/avatar`, {
+    method: 'PATCH',
+    headers: config.headers,
+    body: JSON.stringify({
+      avatar: linkAvatar
+    })
+  }).then(checkRes)
+}
+
 // Внутренние функции
 
 function checkRes(res) {

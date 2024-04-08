@@ -13,6 +13,10 @@
   min-height: 275px;
 }
 
+.popup_delete_card .popup__content {
+  min-height: 195px;
+}
+
 @media screen and (max-width: 568px) {
   .popup__content {
     width: 100%;

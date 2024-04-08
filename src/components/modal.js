@@ -7,8 +7,10 @@ function openPopup(modal) {
 }
 
 // Общая функция закрытия попапа
-function closePopup(modal) {
-    modal.classList.remove('popup_is-opened');
+function closePopup() { //тут был (modal)
+    const openedPopup = document.querySelector('.popup_is-opened');
+    // modal.classList.remove('popup_is-opened');
+    openedPopup.classList.remove('popup_is-opened');
     document.removeEventListener('mousedown', closePopupWindow);
     document.removeEventListener('keydown', handleEscapeKey);
 }
@@ -18,13 +20,15 @@ function closePopupWindow (evt) {
     const needClassContain = evt.target.classList;
     if (needClassContain.contains('popup__close') ||
         needClassContain.contains('popup')) {
-            popups.forEach(closePopup);
+            // popups.forEach(closePopup);
+            closePopup();
         }
 }
 // Закрытие по кнопре Escape
 function handleEscapeKey (evt) {
     if (evt.key === 'Escape') {
-        popups.forEach(closePopup);
+        // popups.forEach(closePopup);
+            closePopup();
     }
 }
 

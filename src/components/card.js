@@ -1,12 +1,13 @@
 import {cardDeleteFromServer, putLikeCardServer, deleteLikeCardServer} from './api';
+import { closePopup } from './modal';
 
 // @todo: Темплейт карточки
 const cardTemplate = document.querySelector('#card-template').content;
 const cardTemplatePlacesItem = cardTemplate.querySelector('.places__item');
 
 // Функция создания карточки
-export function createCard(cardData, deleteCardFunc, handleLikeButton, openPopupImg, profileId) {
-    const cardElement = cardTemplatePlacesItem.cloneNode(true);
+export function createCard(cardData, handleLikeButton, openPopupImg, profileId, popupDeleteElement, openPopup, dataInformation) {
+    const cardElement = cloneCard(cardTemplatePlacesItem);
     const cardImage = cardElement.querySelector('.card__image');
     const cardDeleteButton = cardElement.querySelector('.card__delete-button');
     const likeButton = cardElement.querySelector('.card__like-button');
@@ -19,7 +20,12 @@ export function createCard(cardData, deleteCardFunc, handleLikeButton, openPopup
       likeButton.classList.add('card__like-button_is-active');
     };
     if (profileId === cardData.owner._id) {
-      cardDeleteButton.addEventListener('click', () => deleteCardFunc(cardElement, cardData._id));
+      cardDeleteButton.addEventListener('click', () => {
+        openPopup(popupDeleteElement);
+        dataInformation.id = cardData._id;
+        dataInformation.element = cardElement;
+      })
+      // } deleteCardFunc(cardElement, cardData._id));
     } else {
       cardDeleteButton.remove();
     }
@@ -30,9 +36,13 @@ export function createCard(cardData, deleteCardFunc, handleLikeButton, openPopup
   }
   
   // Функция удаления карточки
-  export function deleteCard(cardElement, cardId) {
-    cardElement.remove();
-    cardDeleteFromServer(cardId).catch((err) => {
+  export function deleteCard(cardElement, cardId, deleteElement) {
+    cardDeleteFromServer(cardId)
+    .then(()=>{
+      cardElement.remove();
+      closePopup(deleteElement);
+    })
+    .catch((err) => {
       console.log(err); // выводим ошибку в консоль
     });
   }
@@ -65,4 +75,8 @@ export function createCard(cardData, deleteCardFunc, handleLikeButton, openPopup
     return likesArray.some(element=>{
       return element._id === profileId;
     })
+  }
+
+  function cloneCard(cloneElement) {
+    return cloneElement.cloneNode(true)
   }

@@ -4,9 +4,7 @@ import "./pages/index.css";
 import { createCard, deleteCard, handleLikeButton } from "./components/card.js";
 import {
   openPopup,
-  closePopup,
-  handleEscapeKey,
-  closePopupWindow,
+  closePopup
 } from "./components/modal.js";
 import { enableValidation, clearValidation } from "./components/validation.js";
 import {

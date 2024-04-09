@@ -1,14 +1,3 @@
-// const validDomElement = {};
-
-// const validDomElement = {
-//     formSelector: '.popup__form',
-//     inputSelector: '.popup__input',
-//     submitButtonSelector: '.popup__button',
-//     inactiveButtonClass: 'popup__button_disabled',
-//     inputErrorClass: 'popup__input_type_error',
-//     errorClass: 'popup__error_visible'
-// }
-
 // Новые функции
 function enableValidation(validationConfig) {
   const formList = Array.from(

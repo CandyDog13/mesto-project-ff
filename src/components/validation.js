@@ -1,7 +1,7 @@
 // Новые функции
 function enableValidation(validationConfig) {
   const formList = Array.from(
-    document.querySelectorAll(validationConfig.formSelector),
+    document.querySelectorAll(validationConfig.formSelector)
   );
   formList.forEach((formElement) => {
     formElement.addEventListener("submit", function (evt) {
@@ -13,10 +13,10 @@ function enableValidation(validationConfig) {
 
 function setEventListeners(formElement, validationConfig) {
   const inputList = Array.from(
-    formElement.querySelectorAll(validationConfig.inputSelector),
+    formElement.querySelectorAll(validationConfig.inputSelector)
   );
   const buttonElement = formElement.querySelector(
-    validationConfig.submitButtonSelector,
+    validationConfig.submitButtonSelector
   );
   toggleButtonState(inputList, buttonElement, validationConfig);
   inputList.forEach((inputElement) => {
@@ -39,7 +39,7 @@ function checkInputValidity(formElement, inputElement, validationConfig) {
       formElement,
       inputElement,
       inputElement.validationMessage,
-      validationConfig,
+      validationConfig
     );
   } else {
     hideErrorInput(formElement, inputElement, validationConfig);
@@ -51,7 +51,7 @@ function showErrorInput(
   formElement,
   inputElement,
   errorMessage,
-  validationConfig,
+  validationConfig
 ) {
   const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
   inputElement.classList.add(validationConfig.inputErrorClass);
@@ -88,10 +88,10 @@ function toggleButtonState(inputList, buttonElement, validationConfig) {
 
 function clearValidation(formElement, validationConfig) {
   const inputList = Array.from(
-    formElement.querySelectorAll(validationConfig.inputSelector),
+    formElement.querySelectorAll(validationConfig.inputSelector)
   );
   const buttonElement = formElement.querySelector(
-    validationConfig.submitButtonSelector,
+    validationConfig.submitButtonSelector
   );
   inputList.forEach((inputElement) => {
     hideErrorInput(formElement, inputElement, validationConfig);

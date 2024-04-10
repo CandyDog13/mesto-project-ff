@@ -2,10 +2,7 @@
 import { data, event } from "jquery";
 import "./pages/index.css";
 import { createCard, deleteCard, handleLikeButton } from "./components/card.js";
-import {
-  openPopup,
-  closePopup
-} from "./components/modal.js";
+import { openPopup, closePopup } from "./components/modal.js";
 import { enableValidation, clearValidation } from "./components/validation.js";
 import {
   getInitialCards,
@@ -88,8 +85,8 @@ Promise.all([getInitialCards(), getProfileInformation()])
           informationServerAnswer._id,
           popupDeleteElement,
           openPopup,
-          dataInformation,
-        ),
+          dataInformation
+        )
       );
     });
   })
@@ -149,9 +146,6 @@ function handleNewCardSubmit(evt) {
   const placeName = formNewCard["place-name"].value;
   const linkInput = formNewCard["link"].value;
 
-  // const cardData = {name:placeName, link:linkInput};
-
-  // cardsContainer.prepend(createCard(cardData, deleteCard, handleLikeButton, openPopupImg));
   postNewCardServer(placeName, linkInput)
     .then((card) => {
       cardsContainer.prepend(
@@ -162,8 +156,8 @@ function handleNewCardSubmit(evt) {
           card.owner._id,
           popupDeleteElement,
           openPopup,
-          dataInformation,
-        ),
+          dataInformation
+        )
       );
       evt.target.reset();
       closePopup(popupNewCard);
@@ -172,8 +166,6 @@ function handleNewCardSubmit(evt) {
       console.log(err); // выводим ошибку в консоль
     })
     .finally(() => renderLoading(false, buttonSubmitNewCard));
-  // formNewCard['link'].value = '';
-  // formNewCard['place-name'].value = '';
 }
 
 function handleEditAvatar(evt) {
@@ -199,8 +191,7 @@ formNewCard.addEventListener("submit", handleNewCardSubmit);
 
 // слушатель на форму смены аватара
 formAvatarEdit.addEventListener("submit", handleEditAvatar);
-// enableValidation();
-console.log(popupDeleteButton);
+
 popupDeleteButton.addEventListener("submit", () => {
   deleteCard(dataInformation.element, dataInformation.id, popupDeleteElement);
 });
